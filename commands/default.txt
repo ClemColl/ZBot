@@ -1,0 +1,8 @@
+module.exports = {
+	name: 'commandName',
+	description: 'commandDescription',
+	execute(message, args) {
+		console.log(`Executing ${this.name} command, initiated by ${message.author.username}, with args ${args}`);
+		message.reply('defaut response');
+	},
+};
