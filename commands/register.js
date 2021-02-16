@@ -1,6 +1,6 @@
 const R6API = require('r6api.js');
 const { email, pass } = require('../config.js');
-const players_registry = require('../data/players_registration.json')
+//const players_registry = require('../data/players_registration.json')
 const r6api = new R6API(email, pass);
 
 module.exports = {
