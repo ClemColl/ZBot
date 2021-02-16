@@ -1,11 +1,11 @@
 const R6API = require('r6api.js');
-const {email, pass} = require('../config.json');
-const players_registry = require ('../data/players_registration.json')
+const { email, pass } = require('../config.js');
+const players_registry = require('../data/players_registration.json')
 const r6api = new R6API(email, pass);
 
 module.exports = {
 	name: 'rankr6',
-	description: 'Show your r6 rank',
+	description: 'Shows your r6 rank',
 	async execute(message, args) {
         console.log(`Executing ${this.name} command, initiated by ${message.author.username}, with args ${args}`);
         

@@ -7,9 +7,12 @@
     "discord.js": "^12.5.1",
     "r6api.js": "^1.6.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "dotenv": "^8.2.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start_dev": "node -r dotenv/config main.js"
   },
   "keywords": [],
   "author": "",
