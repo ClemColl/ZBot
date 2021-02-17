@@ -1,8 +1,8 @@
-const R6API = require('r6api.js');
-const { email, pass } = require('../config.js');
-const { Pool } = require('pg')
+const R6API = require('r6api.js')
+const { r6Mail, r6Pass } = require('../config.js')
+const pool = require('../clientpool.js')
 
-const r6api = new R6API(email, pass);
+
 
 module.exports = {
 	name: 'rankr6',
@@ -11,40 +11,19 @@ module.exports = {
         console.log(`Executing ${this.name} command, initiated by ${message.author.username}, with args ${args}`);
         
         const user_id = message.author.id
+        const queryText = "SELECT platform_id FROM account_table WHERE user_id = '" + user_id + "' and platform_name = 'uPlay'";
 
-        // search for platform_id in db
-        const pool = new Pool({
-            connectionString: process.env.DATABASE_URL,
-            ssl: {
-                rejectUnauthorized: false
-            }
-        });
 
-        pool.connect(err => {
-            if(err) throw err;
-            console.log('Connected to PostgreSQL db')
-        })
+        await pool.connect()
 
-       const query = "SELECT platform_id FROM account_table WHERE user_id = '" + user_id + "' and platform_name = 'uPlay'";
+        const result = await pool.query(queryText)
+        const platform_id = result.rows[0].platform_id
+        const rank = await new R6API(r6Mail, r6Pass).getRank('uplay', platform_id, { regions: ['emea'] }).then(el => el[0].seasons[20].regions.emea.current)
 
-        pool.query(query, function(err, result) {         
-            if(err) throw err;
-            const patform_id = result
-            // get the data with the API call
-            const data = await r6api.getRank('uplay', patform_id, { regions: ['emea'] });
-            const rank = data[0].seasons[20].regions.emea.current
+        message.reply('tu es ' + rank.name + ' avec ' + rank.mmr + ' de MMR.', {files: [rank.image]})
+        
+        //: TODO push data to db
 
-            //: TODO push data to db
-
-            // send message with the stats
-            message.reply('tu es ' + rank.name + ' avec ' + rank.mmr + ' de MMR.', {files: [rank.image]});
-        });
-
-        pool.end(err => {
-            if(err) throw err; 
-            console.log('Disconnected from PostgresSQL');
-          });
-       
-        //message.reply("Cette commande ne fonctionne pas pour l'instant... Mais Zepri est sur le coup!")
+        await pool.end()
 	},
 };
