@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Discord = require('discord.js');
+const pool = require('./clientpool.js')
 
 // reading ENV vars
 const { prefix, token } = require('./config.js')
@@ -14,9 +15,11 @@ for (const file of commandFiles) {
 	client.commands.set(command.name, command);
 }
 
-client.once('ready', () => {
+client.once('ready', async () => {
   client.user.setActivity("l'évolution", { type: "WATCHING"})
   console.log('Up and running!');
+  await pool.connect()
+  console.log('Connected to DB!');
 });
 
 client.on('message', message => {
