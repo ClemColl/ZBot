@@ -1,6 +1,7 @@
 const R6API = require('r6api.js');
 const { email, pass } = require('../config.js');
-//const players_registry = require('../data/players_registration.json')
+const { Pool } = require('pg')
+
 const r6api = new R6API(email, pass);
 
 module.exports = {
@@ -9,20 +10,41 @@ module.exports = {
 	async execute(message, args) {
         console.log(`Executing ${this.name} command, initiated by ${message.author.username}, with args ${args}`);
         
-        //const sendersID = message.author.id;
+        const user_id = message.author.id
 
-        // search for uPlayID in players_registry
-       // const uplayID = players_registry.players[sendersID].platforms.uplayID;
+        // search for platform_id in db
+        const pool = new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: {
+                rejectUnauthorized: false
+            }
+        });
 
-        // get the data with the API call
-       // const data = await r6api.getRank('uplay', uplayID, { regions: ['emea'] });
-       // const rank = data[0].seasons[20].regions.emea.current
+        pool.connect(err => {
+            if(err) throw err;
+            console.log('Connected to PostgreSQL db')
+        })
 
-        // push data to json file
+       const query = "SELECT platform_id FROM account_table WHERE user_id = '" + user_id + "' and platform_name = 'uPlay'";
 
+        pool.query(query, function(err, result) {         
+            if(err) throw err;
+            const patform_id = result
+            // get the data with the API call
+            const data = await r6api.getRank('uplay', patform_id, { regions: ['emea'] });
+            const rank = data[0].seasons[20].regions.emea.current
 
-        // send message with the stats
-		//message.reply('tu es ' + rank.name + ' avec ' + rank.mmr + ' de MMR.', {files: [rank.image]});
-        message.reply("Cette commande ne fonctionne pas pour l'instant... Mais Zepri est sur le coup!")
+            //: TODO push data to db
+
+            // send message with the stats
+            message.reply('tu es ' + rank.name + ' avec ' + rank.mmr + ' de MMR.', {files: [rank.image]});
+        });
+
+        pool.end(err => {
+            if(err) throw err; 
+            console.log('Disconnected from PostgresSQL');
+          });
+       
+        //message.reply("Cette commande ne fonctionne pas pour l'instant... Mais Zepri est sur le coup!")
 	},
 };

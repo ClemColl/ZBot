@@ -5,6 +5,7 @@
   "main": "main.js",
   "dependencies": {
     "discord.js": "^12.5.1",
+    "pg": "^8.5.1",
     "r6api.js": "^1.6.0"
   },
   "devDependencies": {
