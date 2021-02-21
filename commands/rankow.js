@@ -24,21 +24,22 @@ module.exports = {
         var highestRank = 0
         var highestRankImage = ''
         
+        if (ranks.ratings) {
+                if (tank = ranks.ratings[0]) {
+                        finalString = finalString + `TANK: ${tank.level}  |  `
+                        if (tank.level > highestRank) highestRank = tank.level, highestRankImage = tank.rankIcon
+                } else {finalString = finalString + 'TANK: Non classé | '}
+                
+                if (dps = ranks.ratings[1]) {
+                        finalString = finalString + `DPS: ${dps.level}  |  `
+                        if (dps.level > highestRank) highestRank = dps.level, highestRankImage = dps.rankIcon
+                } else {finalString = finalString + 'DPS: Non classé | '}
 
-        if (tank = ranks.ratings[0]) {
-                finalString = finalString + `TANK: ${tank.level}  |  `
-                if (tank.level > highestRank) highestRank = tank.level, highestRankImage = tank.rankIcon
-        } else {finalString = finalString + 'TANK: Non classé | '}
-        
-        if (dps = ranks.ratings[1]) {
-                finalString = finalString + `DPS: ${dps.level}  |  `
-                if (dps.level > highestRank) highestRank = dps.level, highestRankImage = dps.rankIcon
-        } else {finalString = finalString + 'DPS: Non classé | '}
-
-        if (heal = ranks.ratings[2]) {
-                finalString = finalString + `HEAL: ${heal.level}`
-                if (heal.level > highestRank) highestRankImage = heal.rankIcon
-        } else {finalString = finalString + 'HEAL: Non classé'}
+                if (heal = ranks.ratings[2]) {
+                        finalString = finalString + `HEAL: ${heal.level}`
+                        if (heal.level > highestRank) highestRankImage = heal.rankIcon
+                } else {finalString = finalString + 'HEAL: Non classé'}
+        } else { finalString = "Tu n'es pas classé sur ce jeu, et tu fais chier tout le monde"}
 
         message.reply(finalString, {files: [highestRankImage]})
         
