@@ -20,19 +20,27 @@ module.exports = {
         const response = await fetch(api)
         const ranks = await response.json()
 
-        const tank = ranks.ratings[0],
-              dps = ranks.ratings[1],
-              healer = ranks.ratings[2]
+        var finalString = ''
+        var highestRank = 0
+        var highestRankImage = ''
+        
 
-            //:TODO For Each, same logic + variable max rank for rankIcon
-            const tankString = tank ? tank.role.toUpperCase() + ': ' + tank.level + '  |  ' : ''
-            const dpsString = dps ? dps.role.toUpperCase() + ': ' + dps.level + '  |  ' : ''
-            const healerString = healer ? healer.role.toUpperCase() + ': ' + healer.level : ''
+        if (tank = ranks.ratings[0]) {
+                finalString = finalString + `TANK: ${tank.level}  |  `
+                if (tank.level > highestRank) highestRank = tank.level, highestRankImage = tank.rankIcon
+        } else {finalString = finalString + 'TANK: Non classé | '}
+        
+        if (dps = ranks.ratings[1]) {
+                finalString = finalString + `DPS: ${dps.level}  |  `
+                if (dps.level > highestRank) highestRank = dps.level, highestRankImage = dps.rankIcon
+        } else {finalString = finalString + 'DPS: Non classé | '}
 
-            const finalString = tankString + dpsString + healerString    
-        //const ranks = 
+        if (heal = ranks.ratings[2]) {
+                finalString = finalString + `HEAL: ${heal.level}`
+                if (heal.level > highestRank) highestRankImage = heal.rankIcon
+        } else {finalString = finalString + 'HEAL: Non classé'}
 
-        message.reply(finalString, {files: [tank.rankIcon || dps.rankIcon || healer.rankIcon || '']})
+        message.reply(finalString, {files: [highestRankImage]})
         
         //: TODO push data to db
 	},
