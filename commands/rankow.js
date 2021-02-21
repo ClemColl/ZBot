@@ -13,22 +13,25 @@ module.exports = {
 
         const queryText = "SELECT platform_id FROM account_table WHERE user_id = '" + user_id + "' and platform_name = 'Battle.net'";
         const result = await pool.query(queryText)
+        if (result.rows[0] === null) return message.reply("Impossible de te trouver dans la base de données... Vous n'êtes pas assez compétitif?")
         const platform_id = result.rows[0].platform_id
 
         const api = 'https://ow-api.com/v1/stats/pc/eu/' + platform_id + '/profile'
         const response = await fetch(api)
         const ranks = await response.json()
+
         const tank = ranks.ratings[0],
-              dps = ranks.ratings[1], 
+              dps = ranks.ratings[1],
               healer = ranks.ratings[2]
 
-              const finalString =
-              'tu es ' + tank.level + ' en ' + tank.role + '\n' +
-              'tu es ' + dps.level + ' en ' + dps.role + '\n' +
-              'tu es ' + healer.level + ' en ' + healer.role + '\n'
+      const tankString = tank ? 'tu es ' + tank.level + ' en ' + tank.role + '\n' : ''
+      const dpsString = dps ? 'tu es ' + dps.level + ' en ' + dps.role + '\n' : ''
+      const healerString = healer ? 'tu es ' + healer.level + ' en ' + healer.role + '\n' : ''
+
+      const finalString = tankString + dpsString + healerString    
         //const ranks = 
 
-        message.reply(finalString, {files: [tank.rankIcon, ranks.ratings[1].rankIcon, ranks.ratings[2].rankIcon]})
+        message.reply(finalString, {files: [tank.rankIcon || dps.rankIcon || healer.rankIcon || '']})
         
         //: TODO push data to db
 	},
