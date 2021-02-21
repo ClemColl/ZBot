@@ -24,11 +24,12 @@ module.exports = {
               dps = ranks.ratings[1],
               healer = ranks.ratings[2]
 
-      const tankString = tank ? 'tu es ' + tank.level + ' en ' + tank.role + '\n' : ''
-      const dpsString = dps ? 'tu es ' + dps.level + ' en ' + dps.role + '\n' : ''
-      const healerString = healer ? 'tu es ' + healer.level + ' en ' + healer.role + '\n' : ''
+            //:TODO For Each, same logic + variable max rank for rankIcon
+            const tankString = tank ? tank.role.toUpperCase() + ': ' + tank.level + '  |  ' : ''
+            const dpsString = dps ? dps.role.toUpperCase() + ': ' + dps.level + '  |  ' : ''
+            const healerString = healer ? healer.role.toUpperCase() + ': ' + healer.level : ''
 
-      const finalString = tankString + dpsString + healerString    
+            const finalString = tankString + dpsString + healerString    
         //const ranks = 
 
         message.reply(finalString, {files: [tank.rankIcon || dps.rankIcon || healer.rankIcon || '']})
