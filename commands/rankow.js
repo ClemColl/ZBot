@@ -13,7 +13,7 @@ module.exports = {
 
         const queryText = "SELECT platform_id FROM account_table WHERE user_id = '" + user_id + "' and platform_name = 'Battle.net'";
         const result = await pool.query(queryText)
-        if (result.rows[0] === null) return message.reply("Impossible de te trouver dans la base de données... Vous n'êtes pas assez compétitif?")
+        if (result.rows[0] == undefined) return message.reply("Impossible de te trouver dans la base de données... Vous n'êtes pas assez compétitif?")
         const platform_id = result.rows[0].platform_id
 
         const api = 'https://ow-api.com/v1/stats/pc/eu/' + platform_id + '/profile'
@@ -39,8 +39,8 @@ module.exports = {
                         finalString = finalString + `HEAL: ${heal.level}`
                         if (heal.level > highestRank) highestRankImage = heal.rankIcon
                 } else {finalString = finalString + 'HEAL: Non classé'}
-        } else { finalString = "Tu n'es pas classé sur ce jeu, et tu fais chier tout le monde"}
-        
+        } else { finalString = "Tu n'es pas classé sur ce jeu"}
+
         if (highestRankImage == '') {
                 message.reply(finalString)
         } else {
