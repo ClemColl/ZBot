@@ -40,8 +40,13 @@ module.exports = {
                         if (heal.level > highestRank) highestRankImage = heal.rankIcon
                 } else {finalString = finalString + 'HEAL: Non classé'}
         } else { finalString = "Tu n'es pas classé sur ce jeu, et tu fais chier tout le monde"}
-
-        message.reply(finalString, {files: [highestRankImage]})
+        
+        if (highestRankImage == '') {
+                message.reply(finalString)
+        } else {
+                message.reply(finalString, {files: [highestRankImage]})
+        }
+        
         
         //: TODO push data to db
 	},
