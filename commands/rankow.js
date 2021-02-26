@@ -39,7 +39,7 @@ module.exports = {
                         finalString = finalString + `HEAL: ${heal.level}`
                         if (heal.level > highestRank) highestRankImage = heal.rankIcon
                 } else {finalString = finalString + 'HEAL: Non classé'}
-        } else { finalString = "Tu n'es pas classé sur ce jeu"}
+        } else { finalString = "Tu n'es pas classé sur ce jeu, ou ton profil est privé"}
 
         if (highestRankImage == '') {
                 message.reply(finalString)
