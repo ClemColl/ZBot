@@ -16,35 +16,26 @@ module.exports = {
         if (result.rows[0] == undefined) return message.reply("Impossible de te trouver dans la base de données... Vous n'êtes pas assez compétitif?")
         const platform_id = result.rows[0].platform_id
 
-        const api = 'https://ow-api.com/v1/stats/pc/eu/' + platform_id + '/profile'
-        const response = await fetch(api)
+        const response = await fetch(`https://ow-api.com/v1/stats/pc/eu/${platform_id}/profile`)
         const ranks = await response.json()
 
-        var finalString = ''
-        var highestRank = 0
-        var highestRankImage = ''
+        var finalString = "Tu n'es pas classé sur ce jeu, ou ton profil est privé"
         
         if (ranks.ratings) {
-                if (tank = ranks.ratings[0]) {
-                        finalString = finalString + `TANK: ${tank.level}  |  `
-                        if (tank.level > highestRank) highestRank = tank.level, highestRankImage = tank.rankIcon
-                } else {finalString = finalString + 'TANK: Non classé | '}
-                
-                if (dps = ranks.ratings[1]) {
-                        finalString = finalString + `DPS: ${dps.level}  |  `
-                        if (dps.level > highestRank) highestRank = dps.level, highestRankImage = dps.rankIcon
-                } else {finalString = finalString + 'DPS: Non classé | '}
+                finalString = ''
+                var highestRank = 0
+                var highestRankImage = ''
 
-                if (heal = ranks.ratings[2]) {
-                        finalString = finalString + `HEAL: ${heal.level}`
-                        if (heal.level > highestRank) highestRankImage = heal.rankIcon
-                } else {finalString = finalString + 'HEAL: Non classé'}
-        } else { finalString = "Tu n'es pas classé sur ce jeu, ou ton profil est privé"}
+                ranks.ratings.forEach(rating => {
+                        finalString = finalString + `**${rating.role.toUpperCase()}** ${rating.level} \n`
+                        if (rating.level > highestRank) highestRank = rating.level, highestRankImage = rating.rankIcon
+                })
+        }
 
         if (highestRankImage == '') {
-                message.reply(finalString)
+                message.channel.send(finalString)
         } else {
-                message.reply(finalString, {files: [highestRankImage]})
+                message.channel.send(finalString, {files: [highestRankImage]})
         }
         
         
