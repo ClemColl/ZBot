@@ -9,15 +9,27 @@ module.exports = {
         console.log(`Executing ${this.name} command, initiated by ${message.author.username}, with args ${args}`);
         
         const user_id = message.author.id
-        const queryText = "SELECT platform_id FROM account_table WHERE user_id = '" + user_id + "' and platform_name = 'uPlay'";
+        const queryText = `SELECT platform_id FROM account_table WHERE user_id = '${user_id}' and platform_name = 'uPlay'`;
 
-        const result = await pool.query(queryText)
-        const platform_id = result.rows[0].platform_id
-        const rank = await new R6API(r6Mail, r6Pass).getRank('uplay', platform_id, { regions: ['emea'] }).then(el => el[0].seasons[-1].regions.emea.current)
-        console.log(rank)
+        await pool.query(queryText)
+        .then(async (result) => {
+                const platform_id = result.rows[0].platform_id
+                await new R6API(r6Mail, r6Pass).getRank('uplay', platform_id, { regions: ['emea'], seasons: [-1] })
+                .then(result => {
+                        const data = result[0].seasons
+                        const rank = Object.values(data)[0].regions.emea.current
 
-        message.reply('tu es ' + rank.name + ' avec ' + rank.mmr + ' de MMR.', {files: [rank.image]})
-        
+                        message.reply('tu es ' + rank.name + ' avec ' + rank.mmr + ' de MMR.', {files: [rank.image]})
+                }
+                , reason => {
+                        message.reply(`Erreur de merde: ${reason})`)
+                })
+                
+        }, reason => {
+                message.reply(`Erreur de merde: ${reason})`)
+        })
+                
         //: TODO push data to db
-	},
+        
+	}
 };
