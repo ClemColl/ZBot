@@ -14,6 +14,7 @@ module.exports = {
         const result = await pool.query(queryText)
         const platform_id = result.rows[0].platform_id
         const rank = await new R6API(r6Mail, r6Pass).getRank('uplay', platform_id, { regions: ['emea'] }).then(el => el[0].seasons[-1].regions.emea.current)
+        console.log(rank)
 
         message.reply('tu es ' + rank.name + ' avec ' + rank.mmr + ' de MMR.', {files: [rank.image]})
         
