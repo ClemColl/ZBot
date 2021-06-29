@@ -14,7 +14,7 @@ module.exports = {
         await pool.query(queryText)
         .then(async (result) => {
                 const platform_id = result.rows[0].platform_id
-                await new R6API(r6Mail, r6Pass).getRank('uplay', platform_id, { regions: ['emea'], seasons: [-1] })
+                await new R6API(r6Mail, r6Pass).getRanks('uplay', platform_id, { regions: ['emea'], boardIds: 'pvp_ranked', seasons: [-1] })
                 .then(result => {
                         const data = result[0].seasons
                         const rank = Object.values(data)[0].regions.emea.current
