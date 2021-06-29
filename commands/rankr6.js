@@ -1,4 +1,4 @@
-const R6API = require('r6api.js')
+const R6API = require('r6api.js').default;
 const { r6Mail, r6Pass } = require('../config.js')
 const pool = require('../clientpool.js')
 
