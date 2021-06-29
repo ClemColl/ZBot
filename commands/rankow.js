@@ -20,11 +20,12 @@ module.exports = {
         const ranks = await response.json()
 
         var finalString = "Tu n'es pas classé sur ce jeu, ou ton profil est privé"
+        var highestRankImage = ''
         
         if (ranks.ratings) {
                 finalString = ''
                 var highestRank = 0
-                var highestRankImage = ''
+                
 
                 ranks.ratings.forEach(rating => {
                         finalString = finalString + `**${rating.role.toUpperCase()}** ${rating.level} \n`
