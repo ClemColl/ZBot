@@ -1,5 +1,5 @@
 const { apex_key } = require('../config.js')
-//const pool = require('../clientpool.js')
+const pool = require('../clientpool.js')
 const fetch = require('node-fetch')
 
 module.exports = {
