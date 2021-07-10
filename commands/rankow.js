@@ -1,5 +1,3 @@
-//const R6API = require('r6api.js')
-//const { r6Mail, r6Pass } = require('../config.js')
 const pool = require('../clientpool.js')
 const fetch = require('node-fetch')
 

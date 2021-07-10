@@ -1,6 +1,6 @@
-const R6API = require('r6api.js')
-//const { r6Mail, r6Pass } = require('../config.js')
-const pool = require('../clientpool.js')
+const { apex_key } = require('../config.js')
+//const pool = require('../clientpool.js')
+const fetch = require('node-fetch')
 
 module.exports = {
 	name: 'rankapex',
@@ -8,26 +8,16 @@ module.exports = {
 	async execute(message, args) {
         console.log(`Executing ${this.name} command, initiated by ${message.author.username}, with args ${args}`);
         
+        const platform_id = "Twitch_Zepri"
+        
+        const response = await fetch(`https://api.mozambiquehe.re/bridge?version=5&platform=PC&player=${platform_id}&auth=${apex_key}`)
+        const data = await response.json()
         //const user_id = message.author.id
         //const queryText = `SELECT platform_id FROM account_table WHERE user_id = '${user_id}' and platform_name = 'uPlay'`;
 
-       // await pool.query(queryText)
-        //.then(async (result) => {
-                //const platform_id = result.rows[0].platform_id
-                //await new R6API(r6Mail, r6Pass).getRank('uplay', platform_id, { regions: ['emea'], seasons: [-1] })
-                //.then(result => {
-                //const data = result[0].seasons
-                  //      const rank = Object.values(data)[0].regions.emea.current
+        const rank = data.global.rank
 
-                 //       message.reply('tu es ' + rank.name + ' avec ' + rank.mmr + ' de MMR.', {files: [rank.image]})
-                //}
-                //, reason => {
-                //        message.reply(`Erreur de merde: ${reason})`)
-               // })
-                
-        //}, reason => {
-        //        message.reply(`Erreur de merde: ${reason})`)
-       // })
+        message.reply(`Tu es ${rank.rankName} ${rank.rankDiv} avec ${rank.rankScore} points`, {files: [rank.rankImg]})
                 
         //: TODO push data to db
         
